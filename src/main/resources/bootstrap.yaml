@@ -12,4 +12,3 @@ spring:
       searchPaths: ${spring.application.name}
       default-label: main 
 
-      

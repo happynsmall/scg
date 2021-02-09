@@ -21,9 +21,8 @@ public class RouteConfig {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         // 순서 : order -> predicates -> filters -> uri -> metadata -> id
         return builder.routes()
-            // /images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg
-            //https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg
-
+            // /spring-images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg
+            
             .route(r -> 
                 r.order(0)
                 .path("/spring-images/**")
@@ -32,8 +31,8 @@ public class RouteConfig {
                     .rewritePath("/.*/(?<image>.*)", "/images/${image}")
                 )
                 .uri("https://spring.io")
-                .metadata("response-timeout", 200)
-                .metadata("connect-timeout", 200)
+                .metadata("response-timeout", 1000)
+                .metadata("connect-timeout", 1000)
                 .id("images")
             )
 

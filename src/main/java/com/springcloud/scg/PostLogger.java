@@ -23,9 +23,9 @@ public class PostLogger extends AbstractGatewayFilterFactory<PostLogger.Config> 
     public GatewayFilter apply(Config config) {
         //grab configuration from Config object 
         return (exchange, chain) -> {
-            log.info(">>>>> PostGatewayFilterFactory Message => " + config.baseMessage);
-
             return chain.filter(exchange).then(Mono.fromRunnable( () -> {
+                log.info(">>>>> PostGatewayFilterFactory Message => " + config.baseMessage);
+
                 ServerHttpResponse response = exchange.getResponse(); 
                 if(config.logging) log.info("============= END >>>>> "+exchange.getResponse());
             }));

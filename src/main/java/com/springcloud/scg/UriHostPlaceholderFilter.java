@@ -32,12 +32,13 @@ public class UriHostPlaceholderFilter extends AbstractGatewayFilterFactory<UriHo
 
     @Override 
     public GatewayFilter apply(Config config) {
+        log.info(">>>>>>>>>>> order: "+config.order);
+        
         return new OrderedGatewayFilter((exchange, chain) -> {
             String serivceID = "";
             String downStreamPath ="";
             URI uri = exchange.getAttribute(GATEWAY_REQUEST_URL_ATTR);
-            log.info(">>>>>>>>>> Original URI: "+uri.getHost());
-
+            
             LinkedHashSet<URI> originalURI = exchange
                     .getRequiredAttribute(GATEWAY_ORIGINAL_REQUEST_URL_ATTR);			
             addOriginalRequestUrl(exchange,  uri);					

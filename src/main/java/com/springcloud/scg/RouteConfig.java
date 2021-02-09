@@ -25,7 +25,7 @@ public class RouteConfig {
             //https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg
 
             .route(r -> 
-                r.order(10)
+                r.order(-1)
                 .path("/images/**")
                 .filters(f -> 
                     f.addRequestHeader("x-header1", "springcloud")
@@ -38,7 +38,8 @@ public class RouteConfig {
 
             // /daum-images/20200723055344399.png
             .route(r -> 
-                r.order(-1).path("/daum-images/**")
+                r.order(-1)
+                .path("/daum-images/**")
                 .filters(f -> f.rewritePath("/.*/(?<image>.*)", "/daumtop_chanel/op/${image}"))
                 .uri("https://t1.daumcdn.net")
 

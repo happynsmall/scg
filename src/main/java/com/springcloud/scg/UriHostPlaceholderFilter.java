@@ -32,8 +32,8 @@ public class UriHostPlaceholderFilter extends AbstractGatewayFilterFactory<UriHo
 
     @Override 
     public GatewayFilter apply(Config config) {
-        log.info(">>>>>>>>>>> order: "+config.order);
-        
+        //log.info(">>>>>>>>>>> order: "+config.order);
+
         return new OrderedGatewayFilter((exchange, chain) -> {
             String serivceID = "";
             String downStreamPath ="";

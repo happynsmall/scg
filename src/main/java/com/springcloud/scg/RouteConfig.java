@@ -25,8 +25,8 @@ public class RouteConfig {
             //https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg
 
             .route(r -> 
-                r.order(-1)
-                .path("/images/**")
+                r.order(0)
+                .path("/spring-images/**")
                 .filters(f -> 
                     f.addRequestHeader("x-header1", "springcloud")
                     .rewritePath("/.*/(?<image>.*)", "/images/${image}")
@@ -34,7 +34,8 @@ public class RouteConfig {
                 .uri("https://spring.io")
                 .metadata("response-timeout", 200)
                 .metadata("connect-timeout", 200)
-                .id("images"))
+                .id("images")
+            )
 
             // /daum-images/20200723055344399.png
             .route(r -> 

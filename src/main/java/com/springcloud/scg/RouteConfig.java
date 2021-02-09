@@ -19,16 +19,18 @@ public class RouteConfig {
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-
-        log.info("### [CustomRoute] http://gateway**/images -> https://spring.io/images");
-
         // 순서 : order -> predicates -> filters -> uri -> metadata -> id
         return builder.routes()
             // /images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg
+            //https://spring.io/images/spring-logo-9146a4d3298760c2e7e49595184e1975.svg
+
             .route(r -> 
                 r.order(10)
                 .path("/images/**")
-                .filters(f -> f.addRequestHeader("x-header1", "springcloud"))
+                .filters(f -> 
+                    f.addRequestHeader("x-header1", "springcloud")
+                    .rewritePath("/.*/(?<image>.*)", "/images/${image}")
+                )
                 .uri("https://spring.io")
                 .metadata("response-timeout", 200)
                 .metadata("connect-timeout", 200)

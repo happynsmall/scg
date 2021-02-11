@@ -1,12 +1,23 @@
 package com.springcloud.scg;
 
+import java.time.Duration;
+import java.util.function.Function;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
+import org.springframework.cloud.client.circuitbreaker.Customizer;
+import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
+import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 
 @Configuration
 public class RouteConfig {
@@ -45,4 +56,88 @@ public class RouteConfig {
 
             ).build();
     }
+
+   
+/*    
+    @Bean
+    public Customizer<ReactiveResilience4JCircuitBreakerFactory> slowCustomizer() {
+        return factory -> 
+            factory.configure(
+                builder -> 
+                    builder.circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
+                    .timeLimiterConfig(
+                        TimeLimiterConfig
+                        .custom()
+                        .timeoutDuration(Duration.ofSeconds(2))
+                        .build()
+                    ), "slow");
+    }
+
+    @Bean
+    public Customizer<ReactiveResilience4JCircuitBreakerFactory> slowCustomizerEx() {
+        return factory -> 
+            factory.addCircuitBreakerCustomizer(
+                circuitBreaker -> 
+                    circuitBreaker.getEventPublisher()
+                    .onError(normalFluxErrorConsumer)
+                    .onSuccess(normalFluxSuccessConsumer), "normalflux");
+    }
+
+    @Bean
+    public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
+        return factory -> {
+            factory.configure(
+                builder -> 
+                    builder.timeLimiterConfig(
+                        TimeLimiterConfig.custom()
+                        .timeoutDuration(Duration.ofSeconds(2))
+                        .build()
+                    )
+                    .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
+                , "slow", "slowflux");
+                
+                factory
+                .addCircuitBreakerCustomizer(circuitBreaker -> circuitBreaker.getEventPublisher()
+                .onError(normalFluxErrorConsumer)
+                .onSuccess(normalFluxSuccessConsumer), "normalflux");
+         };
+    }
+
+*/
+/*
+    @Bean
+    public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
+        return factory -> 
+            factory.configureDefault(
+                builder -> 
+                    new Resilience4JConfigBuilder(builder)
+                    .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
+                    .timeLimiterConfig(
+                        TimeLimiterConfig
+                        .custom()
+                        .timeoutDuration(Duration.ofSeconds(3))
+                        .build()
+                    )
+                    .build()
+                );
+    }
+
+
+    @Bean
+    public ReactiveCircuitBreakerFactory circuitBreakerFactory() {
+        final ReactiveResilience4JCircuitBreakerFactory factory = new ReactiveResilience4JCircuitBreakerFactory();
+        
+        factory.configureDefault(new Function<String, Resilience4JConfigBuilder.Resilience4JCircuitBreakerConfiguration>() {
+            @Override
+            public Resilience4JConfigBuilder.Resilience4JCircuitBreakerConfiguration apply(String s) {
+                return new Resilience4JConfigBuilder(s)
+                        .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(5)).build())
+                        .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
+                        .build();
+            }
+        });
+        return factory;
+    }
+*/
+    
 }

@@ -32,7 +32,7 @@ public class Resilience4jConfig {
         return factory -> {
           factory.configure(builder -> builder.circuitBreakerConfig(CircuitBreakerConfig.ofDefaults()).build()
                   .setCircuitBreakerConfig(CircuitBreakerConfig.custom().minimumNumberOfCalls(10).failureRateThreshold(20).build())
-                  , "helloworldCircuitBreaker");
+                  , "mycb");
         };
     }
 
@@ -54,5 +54,5 @@ public class Resilience4jConfig {
             ObjectProvider<DispatcherHandler> dispatcherHandlers) {
         return new SpringCloudCircuitBreakerResilience4JFilterFactory(reactiveCircuitBreakerFactory, dispatcherHandlers);
     }
-    
+
 }

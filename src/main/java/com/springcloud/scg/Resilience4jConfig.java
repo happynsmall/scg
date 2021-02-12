@@ -54,4 +54,5 @@ public class Resilience4jConfig {
             ObjectProvider<DispatcherHandler> dispatcherHandlers) {
         return new SpringCloudCircuitBreakerResilience4JFilterFactory(reactiveCircuitBreakerFactory, dispatcherHandlers);
     }
+    
 }

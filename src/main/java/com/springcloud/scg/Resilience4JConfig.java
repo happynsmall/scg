@@ -22,21 +22,23 @@ public class Resilience4jConfig {
             .slidingWindowSize(2)
             .build();
 
-        TimeLimiterConfig timeLimiterConfig = TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(3)).build();
+        //TimeLimiterConfig timeLimiterConfig = TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(3)).build();
 
         return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-                .timeLimiterConfig(timeLimiterConfig).circuitBreakerConfig(circuitBreakerConfig).build());
+                //.timeLimiterConfig(timeLimiterConfig)
+                .circuitBreakerConfig(circuitBreakerConfig)
+                .build());
     }    
 
-    @Bean
-    public Customizer<Resilience4JCircuitBreakerFactory> specificCustomConfiguration2() {
-        CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom().build();
-        TimeLimiterConfig timeLimiterConfig = TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(1)).build();
+    // @Bean
+    // public Customizer<Resilience4JCircuitBreakerFactory> specificCustomConfiguration2() {
+    //     CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom().build();
+    //     TimeLimiterConfig timeLimiterConfig = TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(1)).build();
 
-        return factory -> 
-            factory.configure(builder -> builder.circuitBreakerConfig(circuitBreakerConfig)
-            .timeLimiterConfig(timeLimiterConfig).build(),
-            "mycb", "mycb2", "mycb3");
-    }
+    //     return factory -> 
+    //         factory.configure(builder -> builder.circuitBreakerConfig(circuitBreakerConfig)
+    //         .timeLimiterConfig(timeLimiterConfig).build(),
+    //         "mycb", "mycb2", "mycb3");
+    // }
 
 }

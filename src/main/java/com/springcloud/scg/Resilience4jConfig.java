@@ -25,4 +25,13 @@ public class Resilience4jConfig {
                 .circuitBreakerConfig(circuitBreakerConfig)
                 .build());
     }    
+
+    @Bean 
+    public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
+        CircuitBreakerConfig config = CircuitBreakerConfig.custom().build(); 
+
+        return factory -> 
+            factory.configure(builder -> builder.circuitBreakerConfig(config)
+            .build(), "mycb");
+    }
 }

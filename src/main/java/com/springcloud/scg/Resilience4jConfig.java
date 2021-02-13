@@ -30,9 +30,18 @@ public class Resilience4jConfig {
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCB(){
         return factory -> {
-          factory.configure(builder -> builder.circuitBreakerConfig(CircuitBreakerConfig.ofDefaults()).build()
-                  .setCircuitBreakerConfig(CircuitBreakerConfig.custom().minimumNumberOfCalls(10).failureRateThreshold(20).build())
-                  , "mycb");
+          factory.configure(builder -> 
+            builder.circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
+                .build()
+                .setCircuitBreakerConfig(
+                    CircuitBreakerConfig.custom()
+                    .slidingWindowSize(5)
+                    .minimumNumberOfCalls(2)
+                    .failureRateThreshold(50)
+                    
+                    .build()
+                )
+                , "mycb");
         };
     }
 

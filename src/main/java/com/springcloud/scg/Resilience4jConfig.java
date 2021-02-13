@@ -12,6 +12,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.SlidingWindowType;
 
@@ -61,9 +62,23 @@ public class Resilience4jConfig {
 
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
+        SlidingWindowType winType = ("COUNT_BASED".equals(this.slidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
+
+        CircuitBreakerConfig config = CircuitBreakerConfig.custom()
+            .slidingWindowType(winType)
+            .slidingWindowSize(this.slidingWindowSize)
+            .minimumNumberOfCalls(this.minimumNumberOfCalls)
+            .failureRateThreshold(this.failureRateThreshold)
+            .waitDurationInOpenState(Duration.ofMillis(this.waitDurationInOpenState))
+            .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
+            .slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
+            .slowCallRateThreshold(this.slowCallRateThreshold)
+            .automaticTransitionFromOpenToHalfOpenEnabled(true)
+            .build();
+
         return factory -> 
             factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-                .circuitBreakerConfig(this.setCircuitBreakerConfig())
+                .circuitBreakerConfig(config)
                 .build()
             );
     }
@@ -72,7 +87,7 @@ public class Resilience4jConfig {
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
         SlidingWindowType winType = ("COUNT_BASED".equals(this.customSlidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
 
-        CircuitBreakerConfig config = this.setCircuitBreakerConfig().custom()
+        CircuitBreakerConfig config = CircuitBreakerConfig.custom()
             .slidingWindowType(winType)
             .slidingWindowSize(this.customSlidingWindowSize)
             .minimumNumberOfCalls(this.customMinimumNumberOfCalls)
@@ -88,21 +103,4 @@ public class Resilience4jConfig {
                 .build(), "mycb", "mycb2");
     }
 
-    private CircuitBreakerConfig setCircuitBreakerConfig() {
-        SlidingWindowType winType = ("COUNT_BASED".equals(this.slidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
-
-        CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
-            .slidingWindowType(winType)
-            .slidingWindowSize(this.slidingWindowSize)
-            .minimumNumberOfCalls(this.minimumNumberOfCalls)
-            .failureRateThreshold(this.failureRateThreshold)
-            .waitDurationInOpenState(Duration.ofMillis(this.waitDurationInOpenState))
-            .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
-            .slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
-            .slowCallRateThreshold(this.slowCallRateThreshold)
-            .automaticTransitionFromOpenToHalfOpenEnabled(true)
-            .build();
-
-        return circuitBreakerConfig;
-    }
 }

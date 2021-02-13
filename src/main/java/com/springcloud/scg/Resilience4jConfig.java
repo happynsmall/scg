@@ -61,9 +61,7 @@ public class Resilience4jConfig {
 
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
-        CircuitBreakerConfig config = this.setCircuitBreakerConfig();
-    
-        config.custom()
+        CircuitBreakerConfig config = this.setCircuitBreakerConfig().custom()
             .minimumNumberOfCalls(this.customMinimumNumberOfCalls)
             .failureRateThreshold(this.customFailureRateThreshold)
             .build();

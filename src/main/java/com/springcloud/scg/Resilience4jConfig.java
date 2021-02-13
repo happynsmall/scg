@@ -12,7 +12,6 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.SlidingWindowType;
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
@@ -89,10 +88,11 @@ public class Resilience4jConfig {
             .slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
             .slowCallRateThreshold(this.slowCallRateThreshold)            
             .build();
+        
         TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
             .timeoutDuration(Duration.ofMillis(timeout))
             .build();
-
+            
         return factory -> 
             factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
                 .circuitBreakerConfig(config)
@@ -120,7 +120,7 @@ public class Resilience4jConfig {
             .timeoutDuration(Duration.ofMillis(customTimeout))
             .build();
 
-        log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
+        //log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
 
         return factory ->
             factory.configure(builder -> 

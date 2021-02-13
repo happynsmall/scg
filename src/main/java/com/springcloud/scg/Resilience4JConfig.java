@@ -13,22 +13,22 @@ import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 
 @Configuration
 public class Resilience4jConfig {
-    @Bean
-    public Customizer<Resilience4JCircuitBreakerFactory> globalCustomConfiguration() {
-        CircuitBreakerConfig circuitBreakerConfig = 
-            CircuitBreakerConfig.custom()
-            .failureRateThreshold(50)
-            .waitDurationInOpenState(Duration.ofMillis(1000))
-            .slidingWindowSize(2)
-            .build();
+    // @Bean
+    // public Customizer<Resilience4JCircuitBreakerFactory> globalCustomConfiguration() {
+    //     CircuitBreakerConfig circuitBreakerConfig = 
+    //         CircuitBreakerConfig.custom()
+    //         .failureRateThreshold(50)
+    //         .waitDurationInOpenState(Duration.ofMillis(1000))
+    //         .slidingWindowSize(2)
+    //         .build();
 
-        //TimeLimiterConfig timeLimiterConfig = TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(3)).build();
+    //     //TimeLimiterConfig timeLimiterConfig = TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(3)).build();
 
-        return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-                //.timeLimiterConfig(timeLimiterConfig)
-                .circuitBreakerConfig(circuitBreakerConfig)
-                .build());
-    }    
+    //     return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
+    //             //.timeLimiterConfig(timeLimiterConfig)
+    //             .circuitBreakerConfig(circuitBreakerConfig)
+    //             .build());
+    // }    
 
     // @Bean
     // public Customizer<Resilience4JCircuitBreakerFactory> specificCustomConfiguration2() {

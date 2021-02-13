@@ -44,11 +44,11 @@ public class Resilience4jConfig {
     @Value("${resilience4j.circuitbreaker.default.slowCallRateThreshold:100}")
     private float slowCallRateThreshold;
 
-    @Value("${resilience4j.circuitbreaker.mycb.minimumNumberOfCalls:5}")
-    private int myCBminimumNumberOfCalls;
+    @Value("${resilience4j.circuitbreaker.custom.minimumNumberOfCalls:5}")
+    private int customMinimumNumberOfCalls;
 
-    @Value("${resilience4j.circuitbreaker.mycb.failureRateThreshold:50}")
-    private float myCBfailureRateThreshold;
+    @Value("${resilience4j.circuitbreaker.custom.failureRateThreshold:50}")
+    private float customFailureRateThreshold;
     
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
@@ -64,10 +64,13 @@ public class Resilience4jConfig {
         CircuitBreakerConfig config = this.setCircuitBreakerConfig();
     
         config.custom()
-            .minimumNumberOfCalls(this.myCBminimumNumberOfCalls)
-            .failureRateThreshold(this.myCBfailureRateThreshold)
+            .minimumNumberOfCalls(this.customMinimumNumberOfCalls)
+            .failureRateThreshold(this.customFailureRateThreshold)
             .build();
     
+        log.info(">>>>>>>>>>> minimumNumberOfCalls->"+config.getMinimumNumberOfCalls());
+        log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
+
         return factory ->
             factory.configure(builder -> 
                 builder.circuitBreakerConfig(config)
@@ -86,6 +89,7 @@ public class Resilience4jConfig {
             .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
             .slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
             .slowCallRateThreshold(this.slowCallRateThreshold)
+            .automaticTransitionFromOpenToHalfOpenEnabled(true)
             .build();
 
         return circuitBreakerConfig;

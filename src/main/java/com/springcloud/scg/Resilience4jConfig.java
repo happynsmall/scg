@@ -71,7 +71,7 @@ public class Resilience4jConfig {
         return factory ->
             factory.configure(builder -> 
                 builder.circuitBreakerConfig(config)
-                .build(), "mycb");
+                .build(), "mycb", "mycb2");
     }
 
     private CircuitBreakerConfig setCircuitBreakerConfig() {

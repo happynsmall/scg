@@ -15,12 +15,14 @@ import org.springframework.context.annotation.Configuration;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.SlidingWindowType;
+import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 
 @Configuration
 @RefreshScope
 public class Resilience4jConfig {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+//===== default 
     @Value("${resilience4j.circuitbreaker.default.slidingWindowType:COUNT_BASED}")
     private String slidingWindowType;
 
@@ -45,6 +47,10 @@ public class Resilience4jConfig {
     @Value("${resilience4j.circuitbreaker.default.slowCallRateThreshold:100}")
     private float slowCallRateThreshold;
 
+    @Value("${resilience4j.timeout.default:3000}")
+    private long timeout;
+
+//===== custom 
     @Value("${resilience4j.circuitbreaker.custom.minimumNumberOfCalls:5}")
     private int customMinimumNumberOfCalls;
 
@@ -66,6 +72,9 @@ public class Resilience4jConfig {
     @Value("${resilience4j.circuitbreaker.custom.slowCallRateThreshold:100}")
     private float customSlowCallRateThreshold;
 
+    @Value("${resilience4j.timeout.custom:1000}")
+    private long customTimeout;
+
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
         SlidingWindowType winType = ("COUNT_BASED".equals(this.slidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
@@ -80,10 +89,14 @@ public class Resilience4jConfig {
             .slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
             .slowCallRateThreshold(this.slowCallRateThreshold)            
             .build();
+        TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
+            .timeoutDuration(Duration.ofMillis(timeout))
+            .build();
 
         return factory -> 
             factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
                 .circuitBreakerConfig(config)
+                .timeLimiterConfig(timeoutConfig)
                 .build()
             );
     }
@@ -103,11 +116,16 @@ public class Resilience4jConfig {
             .automaticTransitionFromOpenToHalfOpenEnabled(true)
             .build();
 
+        TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
+            .timeoutDuration(Duration.ofMillis(customTimeout))
+            .build();
+
         log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
 
         return factory ->
             factory.configure(builder -> 
                 builder.circuitBreakerConfig(config)
+                .timeLimiterConfig(timeoutConfig)
                 .build(), "mycb", "mycb2");
     }
 

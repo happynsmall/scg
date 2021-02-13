@@ -13,48 +13,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.DispatcherHandler;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 
 @Configuration
 public class Resilience4jConfig {
-
-    /**
-     * Default Resilience4j circuit breaker configuration
-     */
     @Bean
-    public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
-        return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-                .circuitBreakerConfig(CircuitBreakerConfig.custom().minimumNumberOfCalls(5).failureRateThreshold(20).build())
-                .build());
-    }
+    public ReactiveResilience4JCircuitBreakerFactory reactiveResilience4JCircuitBreakerFactory(CircuitBreakerRegistry circuitBreakerRegistry) {
+        ReactiveResilience4JCircuitBreakerFactory reactiveResilience4JCircuitBreakerFactory = new ReactiveResilience4JCircuitBreakerFactory();
+        reactiveResilience4JCircuitBreakerFactory.configureCircuitBreakerRegistry(circuitBreakerRegistry);
 
-    @Bean
-    public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCB(){
-        return factory -> {
-          factory.configure(builder -> 
-            builder.circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
-                .build()
-                .setCircuitBreakerConfig(
-                    CircuitBreakerConfig.custom()
-                    .slidingWindowSize(5)
-                    .minimumNumberOfCalls(2)
-                    .failureRateThreshold(50)
-                    
-                    .build()
-                )
-                , "mycb");
-        };
-    }
+        reactiveResilience4JCircuitBreakerFactory.configure(
+				builder -> builder
+						//.timeLimiterConfig(timeLimiterRegistry.getConfiguration("backendB").orElse(TimeLimiterConfig.custom().timeoutDuration(Duration.ofMillis(300)).build()))
+						.circuitBreakerConfig(
+                            circuitBreakerRegistry
+                            .getConfiguration("myCB")
+                            .orElse(circuitBreakerRegistry.getDefaultConfig())
+                        )
+                ,
+				"myCB");
 
-    @Bean
-    public FallbackHeadersGatewayFilterFactory fallbackHeadersGatewayFilterFactory() {
-        return new FallbackHeadersGatewayFilterFactory();
+        return reactiveResilience4JCircuitBreakerFactory;
     }
-
-    @Bean
-    public SpringCloudCircuitBreakerFilterFactory resilience4JCircuitBreakerFactory(
-            ReactiveCircuitBreakerFactory reactiveCircuitBreakerFactory,
-            ObjectProvider<DispatcherHandler> dispatcherHandlers) {
-        return new SpringCloudCircuitBreakerResilience4JFilterFactory(reactiveCircuitBreakerFactory, dispatcherHandlers);
-    }
-
 }

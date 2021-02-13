@@ -12,13 +12,13 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 
 @Configuration
 public class Resilience4jConfig {
-    @Bean 
-    public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
-        return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-                 .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
-                 .build());
-                 
-    }
+    // @Bean 
+    // public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
+    //     return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
+    //              .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
+    //              .build());
+
+    // }
 
     // @Bean
     // public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {

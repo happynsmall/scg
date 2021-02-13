@@ -16,7 +16,7 @@ public class Resilience4JConfig {
 
         reactiveResilience4JCircuitBreakerFactory.configure(
                 builder -> builder
-                        //.timeLimiterConfig(timeLimiterRegistry.getConfiguration("backendB").orElse(TimeLimiterConfig.custom().timeoutDuration(Duration.ofMillis(300)).build()))
+                        //.timeLimiterConfig(timeLimiterRegistry.getConfiguration("mycb").orElse(TimeLimiterConfig.custom().timeoutDuration(Duration.ofMillis(1000)).build()))
                         .circuitBreakerConfig(
                             circuitBreakerRegistry
                             .getConfiguration("mycb")

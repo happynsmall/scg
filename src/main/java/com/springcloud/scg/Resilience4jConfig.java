@@ -30,6 +30,7 @@ public class Resilience4jConfig {
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
         CircuitBreakerConfig config = CircuitBreakerConfig.custom()
         .minimumNumberOfCalls(3)
+        .waitDurationInOpenState(Duration.ofMillis(5000))
         .build(); 
 
         return factory -> 

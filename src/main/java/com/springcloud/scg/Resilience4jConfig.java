@@ -49,6 +49,12 @@ public class Resilience4jConfig {
 
     @Value("${resilience4j.circuitbreaker.custom.failureRateThreshold:50}")
     private float customFailureRateThreshold;
+
+    @Value("${resilience4j.circuitbreaker.custom.slidingWindowType:COUNT_BASED}")
+    private String customSlidingWindowType;
+
+    @Value("${resilience4j.circuitbreaker.custom.slidingWindowSize:10}")
+    private int customSlidingWindowSize;
     
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
@@ -61,13 +67,17 @@ public class Resilience4jConfig {
 
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
+        SlidingWindowType winType = ("COUNT_BASED".equals(this.customSlidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
+
         CircuitBreakerConfig config = this.setCircuitBreakerConfig().custom()
+            .slidingWindowType(winType)
+            .slidingWindowSize(this.customSlidingWindowSize)
             .minimumNumberOfCalls(this.customMinimumNumberOfCalls)
             .failureRateThreshold(this.customFailureRateThreshold)
             .build();
     
-        log.info(">>>>>>>>>>> minimumNumberOfCalls->"+config.getMinimumNumberOfCalls());
-        log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
+        // log.info(">>>>>>>>>>> minimumNumberOfCalls->"+config.getMinimumNumberOfCalls());
+        // log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
 
         return factory ->
             factory.configure(builder -> 

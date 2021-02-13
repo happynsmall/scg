@@ -60,6 +60,12 @@ public class Resilience4jConfig {
     @Value("${resilience4j.circuitbreaker.custom.waitDurationInOpenState:5000}")
     private long customWaitDurationInOpenState;
 
+    @Value("${resilience4j.circuitbreaker.custom.slowCallDurationThreshold:3000}")
+    private long customSlowCallDurationThreshold;
+
+    @Value("${resilience4j.circuitbreaker.custom.slowCallRateThreshold:100}")
+    private float customSlowCallRateThreshold;
+
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
         SlidingWindowType winType = ("COUNT_BASED".equals(this.slidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
@@ -72,8 +78,7 @@ public class Resilience4jConfig {
             .waitDurationInOpenState(Duration.ofMillis(this.waitDurationInOpenState))
             .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
             .slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
-            .slowCallRateThreshold(this.slowCallRateThreshold)
-            .automaticTransitionFromOpenToHalfOpenEnabled(true)
+            .slowCallRateThreshold(this.slowCallRateThreshold)            
             .build();
 
         return factory -> 
@@ -93,6 +98,9 @@ public class Resilience4jConfig {
             .minimumNumberOfCalls(this.customMinimumNumberOfCalls)
             .failureRateThreshold(this.customFailureRateThreshold)
             .waitDurationInOpenState(Duration.ofMillis(this.customWaitDurationInOpenState))
+            .slowCallDurationThreshold(Duration.ofMillis(this.customSlowCallDurationThreshold))
+            .slowCallRateThreshold(this.customSlowCallRateThreshold)
+            .automaticTransitionFromOpenToHalfOpenEnabled(true)
             .build();
 
         log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());

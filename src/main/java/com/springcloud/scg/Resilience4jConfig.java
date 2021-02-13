@@ -55,7 +55,10 @@ public class Resilience4jConfig {
 
     @Value("${resilience4j.circuitbreaker.custom.slidingWindowSize:10}")
     private int customSlidingWindowSize;
-    
+
+    @Value("${resilience4j.circuitbreaker.custom.waitDurationInOpenState:5000}")
+    private long customWaitDurationInOpenState;
+
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
         return factory -> 
@@ -74,6 +77,7 @@ public class Resilience4jConfig {
             .slidingWindowSize(this.customSlidingWindowSize)
             .minimumNumberOfCalls(this.customMinimumNumberOfCalls)
             .failureRateThreshold(this.customFailureRateThreshold)
+            .waitDurationInOpenState(Duration.ofMillis(this.customWaitDurationInOpenState))
             .build();
 
         log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());

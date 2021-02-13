@@ -75,9 +75,8 @@ public class Resilience4jConfig {
             .minimumNumberOfCalls(this.customMinimumNumberOfCalls)
             .failureRateThreshold(this.customFailureRateThreshold)
             .build();
-    
-        // log.info(">>>>>>>>>>> minimumNumberOfCalls->"+config.getMinimumNumberOfCalls());
-        // log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
+
+        log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
 
         return factory ->
             factory.configure(builder -> 

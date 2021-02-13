@@ -2,6 +2,8 @@ package com.springcloud.scg;
 
 import java.time.Duration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
@@ -16,6 +18,8 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.SlidingWindowT
 @Configuration
 @RefreshScope
 public class Resilience4jConfig {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Value("${resilience4j.circuitbreaker.default.slidingWindowType:COUNT_BASED}")
     private String slidingWindowType;
 
@@ -40,10 +44,37 @@ public class Resilience4jConfig {
     @Value("${resilience4j.circuitbreaker.default.slowCallRateThreshold:100}")
     private float slowCallRateThreshold;
 
+    @Value("${resilience4j.circuitbreaker.mycb.minimumNumberOfCalls:5}")
+    private int myCBminimumNumberOfCalls;
+
+    @Value("${resilience4j.circuitbreaker.mycb.failureRateThreshold:50}")
+    private float myCBfailureRateThreshold;
     
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
+        return factory -> 
+            factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
+                .circuitBreakerConfig(this.setCircuitBreakerConfig())
+                .build()
+            );
+    }
 
+    @Bean
+    public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
+        CircuitBreakerConfig config = this.setCircuitBreakerConfig();
+    
+        config.custom()
+            .minimumNumberOfCalls(this.myCBminimumNumberOfCalls)
+            .failureRateThreshold(this.myCBfailureRateThreshold)
+            .build();
+    
+        return factory ->
+            factory.configure(builder -> 
+                builder.circuitBreakerConfig(config)
+                .build(), "mycb");
+    }
+
+    private CircuitBreakerConfig setCircuitBreakerConfig() {
         SlidingWindowType winType = ("COUNT_BASED".equals(this.slidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
 
         CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
@@ -57,28 +88,6 @@ public class Resilience4jConfig {
             .slowCallRateThreshold(this.slowCallRateThreshold)
             .build();
 
-        return factory -> 
-            factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-                .circuitBreakerConfig(circuitBreakerConfig)
-                .build()
-            );
-    }
-
-    @Value("${resilience4j.circuitbreaker.mycb.minimumNumberOfCalls:5}")
-    private int myCBminimumNumberOfCalls;
-
-    @Value("${resilience4j.circuitbreaker.mycb.failureRateThreshold:50}")
-    private float myCBfailureRateThreshold;
-
-    @Bean
-    public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
-        CircuitBreakerConfig config = CircuitBreakerConfig.custom()
-            .minimumNumberOfCalls(this.myCBminimumNumberOfCalls)
-            .failureRateThreshold(this.myCBfailureRateThreshold)
-            .build();
-
-        return factory ->
-            factory.configure(builder -> builder.circuitBreakerConfig(config)
-            .build(), "mycb");
+        return circuitBreakerConfig;
     }
 }

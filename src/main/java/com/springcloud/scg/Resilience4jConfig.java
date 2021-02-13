@@ -12,29 +12,30 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 
 @Configuration
 public class Resilience4jConfig {
-    @Bean
-    public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
-        CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
-                .failureRateThreshold(5)
-                .permittedNumberOfCallsInHalfOpenState(2)
-                .slidingWindowSize(2)
-                .minimumNumberOfCalls(5)
-                .waitDurationInOpenState(Duration.ofMillis(20000))
-                .build();
-        return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-                .circuitBreakerConfig(circuitBreakerConfig)
-                .build());
-    }    
+    
+    // @Bean
+    // public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
+    //     CircuitBreakerConfig circuitBreakerConfig = CircuitBreakerConfig.custom()
+    //             .failureRateThreshold(5)
+    //             .permittedNumberOfCallsInHalfOpenState(2)
+    //             .slidingWindowSize(2)
+    //             .minimumNumberOfCalls(5)
+    //             .waitDurationInOpenState(Duration.ofMillis(20000))
+    //             .build();
+    //     return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
+    //             .circuitBreakerConfig(circuitBreakerConfig)
+    //             .build());
+    // }    
 
-    @Bean 
-    public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
-        CircuitBreakerConfig config = CircuitBreakerConfig.custom()
-        .minimumNumberOfCalls(3)
-        .waitDurationInOpenState(Duration.ofMillis(5000))
-        .build(); 
+    // @Bean 
+    // public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
+    //     CircuitBreakerConfig config = CircuitBreakerConfig.custom()
+    //     .minimumNumberOfCalls(3)
+    //     .waitDurationInOpenState(Duration.ofMillis(5000))
+    //     .build(); 
 
-        return factory -> 
-            factory.configure(builder -> builder.circuitBreakerConfig(config)
-            .build(), "mycb");
-    }
+    //     return factory -> 
+    //         factory.configure(builder -> builder.circuitBreakerConfig(config)
+    //         .build(), "mycb");
+    // }
 }

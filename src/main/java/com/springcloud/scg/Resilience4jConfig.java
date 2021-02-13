@@ -28,7 +28,9 @@ public class Resilience4jConfig {
 
     @Bean 
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
-        CircuitBreakerConfig config = CircuitBreakerConfig.custom().build(); 
+        CircuitBreakerConfig config = CircuitBreakerConfig.custom()
+        .minimumNumberOfCalls(3)
+        .build(); 
 
         return factory -> 
             factory.configure(builder -> builder.circuitBreakerConfig(config)

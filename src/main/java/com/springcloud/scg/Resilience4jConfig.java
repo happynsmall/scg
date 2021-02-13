@@ -84,9 +84,9 @@ public class Resilience4jConfig {
             .minimumNumberOfCalls(this.minimumNumberOfCalls)
             .failureRateThreshold(this.failureRateThreshold)
             .waitDurationInOpenState(Duration.ofMillis(this.waitDurationInOpenState))
-            .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
             .slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
             .slowCallRateThreshold(this.slowCallRateThreshold)            
+            .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
             .build();
         
         TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
@@ -113,7 +113,7 @@ public class Resilience4jConfig {
             .waitDurationInOpenState(Duration.ofMillis(this.customWaitDurationInOpenState))
             .slowCallDurationThreshold(Duration.ofMillis(this.customSlowCallDurationThreshold))
             .slowCallRateThreshold(this.customSlowCallRateThreshold)
-            .automaticTransitionFromOpenToHalfOpenEnabled(true)
+            .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
             .build();
 
         TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()

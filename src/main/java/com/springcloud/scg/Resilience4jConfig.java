@@ -130,7 +130,7 @@ public class Resilience4jConfig {
             factory.configure(builder -> 
                 builder.circuitBreakerConfig(config)
                 .timeLimiterConfig(timeoutConfig)
-                .build(), "mycb1", "mycb2");
+                .build(), "mycb");
     }
 
 }

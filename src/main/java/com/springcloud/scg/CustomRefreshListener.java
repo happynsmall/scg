@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RefreshListener implements ApplicationListener<EnvironmentChangeEvent> {
+public class CustomRefreshListener implements ApplicationListener<EnvironmentChangeEvent> {
     @Autowired
     Resilience4jConfig resilience4jConfig;
 

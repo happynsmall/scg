@@ -1,5 +1,6 @@
 package com.springcloud.scg;
 
+import java.io.IOException;
 import java.time.Duration;
 
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.cloud.gateway.support.TimeoutException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -87,6 +89,7 @@ public class Resilience4jConfig {
             .slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
             .slowCallRateThreshold(this.slowCallRateThreshold)            
             .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
+            .recordExceptions(IOException.class, TimeoutException.class)
             .build();
         
         TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
@@ -114,6 +117,7 @@ public class Resilience4jConfig {
             .slowCallDurationThreshold(Duration.ofMillis(this.customSlowCallDurationThreshold))
             .slowCallRateThreshold(this.customSlowCallRateThreshold)
             .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
+            .recordExceptions(IOException.class, TimeoutException.class)
             .build();
 
         TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()

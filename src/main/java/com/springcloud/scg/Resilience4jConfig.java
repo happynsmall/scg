@@ -23,22 +23,6 @@ import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 public class Resilience4jConfig {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Bean
-    public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCB() {
-        CircuitBreakerConfig config = CircuitBreakerConfig.custom()
-            .slidingWindowType(SlidingWindowType.COUNT_BASED)
-            .slidingWindowSize(10)
-            .minimumNumberOfCalls(2)
-            .failureRateThreshold(60)
-            .waitDurationInOpenState(Duration.ofSeconds(1000))
-            .build();
-
-        return factory ->
-            factory.configure(builder -> 
-                builder.circuitBreakerConfig(config)
-                .build(), "mycb");
-    }
-
 //===== default 
     @Value("${resilience4j.circuitbreaker.default.slidingWindowType:COUNT_BASED}")
     private String slidingWindowType;
@@ -140,7 +124,7 @@ public class Resilience4jConfig {
             .timeoutDuration(Duration.ofMillis(customTimeout))
             .build();
 
-        //log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
+        log.info(">>>>>>>>>>> waitDurationInOpenState->"+config.getWaitDurationInOpenState());
 
         return factory ->
             factory.configure(builder -> 

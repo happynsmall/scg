@@ -30,7 +30,7 @@ public class Resilience4jConfig {
             .slidingWindowSize(10)
             .minimumNumberOfCalls(2)
             .failureRateThreshold(60)
-            .waitDurationInOpenState(Duration.ofMillis(10000))
+            .waitDurationInOpenState(Duration.ofSeconds(1000))
             .build();
 
         return factory ->

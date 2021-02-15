@@ -73,8 +73,8 @@ public class Resilience4jConfig {
     @Value("${resilience4j.circuitbreaker.custom.slowCallRateThreshold:100}")
     private float customSlowCallRateThreshold;
 
-    // @Value("${resilience4j.timeout.custom:1000}")
-    // private long customTimeout;
+    @Value("${resilience4j.timeout.custom:1000}")
+    private long customTimeout;
 
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
@@ -126,7 +126,8 @@ public class Resilience4jConfig {
         //     .timeoutDuration(Duration.ofMillis(customTimeout))
         //     .build();
 
-//        log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
+        log.info(String.format(">>>>>>>>>>> minimumNumberOfCalls: %s", this.customMinimumNumberOfCalls);
+        log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
 
         return factory -> 
             factory.configure(builder -> 

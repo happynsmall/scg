@@ -129,7 +129,7 @@ public class Resilience4jConfig {
             .timeoutDuration(Duration.ofMillis(customTimeout))
             .build();
 
-        //log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
+        log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
 
         return factory ->
             factory.configure(builder -> 
@@ -137,5 +137,4 @@ public class Resilience4jConfig {
                 .timeLimiterConfig(timeoutConfig)
                 .build(), "mycb");
     }
-
 }

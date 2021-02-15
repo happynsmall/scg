@@ -6,6 +6,7 @@ import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
@@ -20,6 +21,7 @@ import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 
 @Configuration
 @RefreshScope
+@EnableConfigurationProperties(Resilience4jConfig.class)
 public class Resilience4jConfig {
     private final Logger log = LoggerFactory.getLogger(getClass());
 

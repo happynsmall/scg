@@ -126,7 +126,7 @@ public class Resilience4jConfig {
         //     .timeoutDuration(Duration.ofMillis(customTimeout))
         //     .build();
 
-        log.info(String.format(">>>>>>>>>>> minimumNumberOfCalls: %s", this.customMinimumNumberOfCalls);
+        log.info(String.format(">>>>>>>>>>> minimumNumberOfCalls: %s", this.customMinimumNumberOfCalls));
         log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
 
         return factory -> 

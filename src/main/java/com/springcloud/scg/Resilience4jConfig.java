@@ -119,9 +119,9 @@ public class Resilience4jConfig {
             .recordExceptions(java.io.IOException.class, java.util.concurrent.TimeoutException.class)
             .build();
 
-        // TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
-        //     .timeoutDuration(Duration.ofMillis(customTimeout))
-        //     .build();
+        TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
+            .timeoutDuration(Duration.ofMillis(customTimeout))
+            .build();
 
         log.info(String.format(">>>>>>>>>>> minimumNumberOfCalls: %s", this.customMinimumNumberOfCalls));
         log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
@@ -129,7 +129,7 @@ public class Resilience4jConfig {
         return factory -> 
             factory.configure(builder -> 
                 builder.circuitBreakerConfig(config)
-//                .timeLimiterConfig(timeoutConfig)
+                .timeLimiterConfig(timeoutConfig)
                 .build(), "mycb");
 
     }

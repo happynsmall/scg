@@ -117,9 +117,8 @@ public class Resilience4jConfig {
             // .slowCallRateThreshold(this.customSlowCallRateThreshold)
             // .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
             .recordExceptions(java.io.IOException.class, 
-                    java.util.concurrent.TimeoutException.class, 
-                    org.springframework.web.server.ResponseStatusException.class
-                )
+                java.util.concurrent.TimeoutException.class, 
+                org.springframework.web.server.ResponseStatusException.class)
             .build();
 
         TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()

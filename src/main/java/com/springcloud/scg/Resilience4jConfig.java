@@ -119,7 +119,7 @@ public class Resilience4jConfig {
             // .slowCallDurationThreshold(Duration.ofMillis(this.customSlowCallDurationThreshold))
             // .slowCallRateThreshold(this.customSlowCallRateThreshold)
             // .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
-            .recordExceptions(IOException.class, TimeoutException.class)
+            //.recordExceptions(IOException.class, TimeoutException.class)
             .build();
 
         // TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()

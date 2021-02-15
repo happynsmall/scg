@@ -113,8 +113,8 @@ public class Resilience4jConfig {
             .minimumNumberOfCalls(this.customMinimumNumberOfCalls)
             .failureRateThreshold(this.customFailureRateThreshold)
             .waitDurationInOpenState(Duration.ofMillis(this.customWaitDurationInOpenState))
-            // .slowCallDurationThreshold(Duration.ofMillis(this.customSlowCallDurationThreshold))
-            // .slowCallRateThreshold(this.customSlowCallRateThreshold)
+            .slowCallDurationThreshold(Duration.ofMillis(this.customSlowCallDurationThreshold))
+            .slowCallRateThreshold(this.customSlowCallRateThreshold)
             // .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
             .recordExceptions(java.io.IOException.class, 
                 java.util.concurrent.TimeoutException.class, 
@@ -125,8 +125,8 @@ public class Resilience4jConfig {
             .timeoutDuration(Duration.ofMillis(customTimeout))
             .build();
 
-        log.info(String.format(">>>>>>>>>>> minimumNumberOfCalls: %s", this.customMinimumNumberOfCalls));
-        log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
+        // log.info(String.format(">>>>>>>>>>> minimumNumberOfCalls: %s", this.customMinimumNumberOfCalls));
+        // log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
 
         return factory -> 
             factory.configure(builder -> 

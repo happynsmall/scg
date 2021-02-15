@@ -118,9 +118,9 @@ public class Resilience4jConfig {
             .minimumNumberOfCalls(this.customMinimumNumberOfCalls)
             .failureRateThreshold(this.customFailureRateThreshold)
             .waitDurationInOpenState(Duration.ofMillis(this.customWaitDurationInOpenState))
-            .slowCallDurationThreshold(Duration.ofMillis(this.customSlowCallDurationThreshold))
-            .slowCallRateThreshold(this.customSlowCallRateThreshold)
-            .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
+            // .slowCallDurationThreshold(Duration.ofMillis(this.customSlowCallDurationThreshold))
+            // .slowCallRateThreshold(this.customSlowCallRateThreshold)
+            // .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
             .recordExceptions(IOException.class, TimeoutException.class)
             .build();
 

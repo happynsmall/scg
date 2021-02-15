@@ -105,7 +105,10 @@ public class Resilience4jConfig {
     }
 
     @Bean
+    @RefreshScope
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
+        log.info(">>>>>>>>>>>> START myCustomizer()");
+        
         SlidingWindowType winType = ("COUNT_BASED".equals(this.customSlidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
 
         CircuitBreakerConfig config = CircuitBreakerConfig.custom()
@@ -124,7 +127,7 @@ public class Resilience4jConfig {
             .timeoutDuration(Duration.ofMillis(customTimeout))
             .build();
 
-        log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
+        //log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
 
         return factory ->
             factory.configure(builder -> 
@@ -133,8 +136,4 @@ public class Resilience4jConfig {
                 .build(), "mycb");
     }
 
-    public void refresh() {
-        defaultCustomizer();
-        myCustomizer();
-    }
 }

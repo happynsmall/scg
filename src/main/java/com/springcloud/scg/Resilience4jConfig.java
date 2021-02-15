@@ -104,6 +104,7 @@ public class Resilience4jConfig {
     }
 
     @Bean
+    @RefreshScope
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
         log.info(">>>>>>>>>>>> START myCustomizer()");
         

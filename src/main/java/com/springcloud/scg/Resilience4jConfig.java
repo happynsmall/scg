@@ -73,33 +73,35 @@ public class Resilience4jConfig {
     @Value("${resilience4j.timeout.custom:1000}")
     private long customTimeout;
 
-    // @Bean
-    // public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
-    //     SlidingWindowType winType = ("COUNT_BASED".equals(this.slidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
+    @Bean
+    public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
+        SlidingWindowType winType = ("COUNT_BASED".equals(this.slidingWindowType)?SlidingWindowType.COUNT_BASED:SlidingWindowType.TIME_BASED);
 
-    //     CircuitBreakerConfig config = CircuitBreakerConfig.custom()
-    //         .slidingWindowType(winType)
-    //         .slidingWindowSize(this.slidingWindowSize)
-    //         .minimumNumberOfCalls(this.minimumNumberOfCalls)
-    //         .failureRateThreshold(this.failureRateThreshold)
-    //         .waitDurationInOpenState(Duration.ofMillis(this.waitDurationInOpenState))
-    //         //.slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
-    //         //.slowCallRateThreshold(this.slowCallRateThreshold)            
-    //         //.permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
-    //         .recordExceptions(java.io.IOException.class, java.util.concurrent.TimeoutException.class)
-    //         .build();
+        CircuitBreakerConfig config = CircuitBreakerConfig.custom()
+            .slidingWindowType(winType)
+            .slidingWindowSize(this.slidingWindowSize)
+            .minimumNumberOfCalls(this.minimumNumberOfCalls)
+            .failureRateThreshold(this.failureRateThreshold)
+            .waitDurationInOpenState(Duration.ofMillis(this.waitDurationInOpenState))
+            .slowCallDurationThreshold(Duration.ofMillis(this.slowCallDurationThreshold))
+            .slowCallRateThreshold(this.slowCallRateThreshold)            
+            .permittedNumberOfCallsInHalfOpenState(this.permittedNumberOfCallsInHalfOpenState)
+            .recordExceptions(java.io.IOException.class, 
+                java.util.concurrent.TimeoutException.class, 
+                org.springframework.web.server.ResponseStatusException.class)
+            .build();
         
-    //     TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
-    //         .timeoutDuration(Duration.ofMillis(timeout))
-    //         .build();
+        TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
+            .timeoutDuration(Duration.ofMillis(timeout))
+            .build();
             
-    //     return factory -> 
-    //         factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-    //             .circuitBreakerConfig(config)
-    //             //.timeLimiterConfig(timeoutConfig)
-    //             .build()
-    //         );
-    // }
+        return factory -> 
+            factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
+                .circuitBreakerConfig(config)
+                .timeLimiterConfig(timeoutConfig)
+                .build()
+            );
+    }
 
     @Bean
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
@@ -124,9 +126,6 @@ public class Resilience4jConfig {
         TimeLimiterConfig timeoutConfig = TimeLimiterConfig.custom()
             .timeoutDuration(Duration.ofMillis(customTimeout))
             .build();
-
-        // log.info(String.format(">>>>>>>>>>> minimumNumberOfCalls: %s", this.customMinimumNumberOfCalls));
-        // log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
 
         return factory -> 
             factory.configure(builder -> 

@@ -6,13 +6,14 @@ import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.support.TimeoutException;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
@@ -20,8 +21,9 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.SlidingWindowT
 import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 
 @Configuration
+@EnableAutoConfiguration
+@ComponentScan
 @RefreshScope
-@EnableConfigurationProperties(Resilience4jConfig.class)
 public class Resilience4jConfig {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -107,7 +109,6 @@ public class Resilience4jConfig {
     }
 
     @Bean
-    @RefreshScope
     public Customizer<ReactiveResilience4JCircuitBreakerFactory> myCustomizer() {
         log.info(">>>>>>>>>>>> START myCustomizer()");
         
@@ -131,10 +132,11 @@ public class Resilience4jConfig {
 
         log.info(String.format(">>>>>>>>>>> waitDurationInOpenState: %s -> %s", this.customWaitDurationInOpenState, config.getWaitDurationInOpenState()));
 
-        return factory ->
+        return factory -> 
             factory.configure(builder -> 
                 builder.circuitBreakerConfig(config)
                 .timeLimiterConfig(timeoutConfig)
                 .build(), "mycb");
+
     }
 }
